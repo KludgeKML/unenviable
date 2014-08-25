@@ -1,9 +1,13 @@
 # encoding: utf-8
+require 'dotenv'
 require 'yaml'
 
+# Handles loading a YAML file that will describe what ENV variables
+# are necessary for a twelve-factor app in a specific environment.
 module Unenviable
   def self.check
     load_env_descriptions unless @env_list
+    Dotenv.load
     discrepancies = { required: [], optional: [], forbidden: [] }
 
     @env_list.each do |var, details|
@@ -13,6 +17,15 @@ module Unenviable
     end
 
     discrepancies
+  end
+
+  def create_minimum_dotenv
+    load_env_descriptions unless @env_list
+    File.new('.env', 'wb') do |f|
+      @env_list.each do |var, details|
+        f.write("export #{var}=#{details['initial_value']}") if details[:required]
+      end
+    end
   end
 
   def self.env_descriptions_file_location

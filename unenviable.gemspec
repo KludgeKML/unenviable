@@ -1,8 +1,8 @@
 # encoding: utf-8
 Gem::Specification.new do |s|
   s.name        = 'unenviable'
-  s.version     = '0.1.0'
-  s.date        = '2014-08-23'
+  s.version     = '0.2.0'
+  s.date        = '2014-08-25'
   s.summary     = 'Unenviable'
   s.description = 'Makes ENV vars easier to keep track of in distributed development'
   s.authors     = ['K M Lawrence']
@@ -11,4 +11,6 @@ Gem::Specification.new do |s|
   s.files       = ['lib/unenviable.rb', 'bin/unenviable']
   s.homepage    = 'http://rubygems.org/gems/unenviable'
   s.license     = 'MIT'
+
+  s.add_runtime_dependency 'dotenv', '>= 0.11.1'
 end
