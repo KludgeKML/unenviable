@@ -5,6 +5,8 @@ require 'yaml'
 # Handles loading a YAML file that will describe what ENV variables
 # are necessary for a twelve-factor app in a specific environment.
 module Unenviable
+  attr_writer @env_list
+
   def self.check
     load_env_descriptions unless @env_list
     Dotenv.load
@@ -19,7 +21,7 @@ module Unenviable
     discrepancies
   end
 
-  def create_minimum_dotenv
+  def self.create_minimum_dotenv
     load_env_descriptions unless @env_list
     File.new('.env', 'wb') do |f|
       @env_list.each do |var, details|
