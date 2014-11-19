@@ -2,10 +2,30 @@
 # encoding: utf-8
 require 'unenviable'
 
-required, optional, forbidden = Unenviable.check
+CHECK_USAGE = 'unenviable check'
+GENERATE_USAGE = 'unenviable generate'
 
-if required.size > 0
-  puts ""
-  required.each { |req| }
+def show_errors(errors)
+  return if errors.size == 0
+  puts 'Usage: ' + errors[0]
+  errors[1..-1].each { |e| puts '       ' + e }
+  exit 1
+end
 
-forbidden.each
+def check_params(params)
+  case params[0]
+  when 'check'
+  when 'generate'
+  else
+    show_errors([CHECK_USAGE, GENERATE_USAGE])
+  end
+end
+
+check_params(ARGV)
+
+case ARGV[0]
+when 'check'
+  Unenviable.check
+when 'generate'
+  Unenviable.generate
+end
