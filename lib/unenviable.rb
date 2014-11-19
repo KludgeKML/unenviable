@@ -2,10 +2,12 @@
 require 'dotenv'
 require 'yaml'
 
+require 'unenviable/env_wrapper'
+
 # Handles loading a YAML file that will describe what ENV variables
 # are necessary for a twelve-factor app in a specific environment.
 module Unenviable
-  attr_writer @env_list
+  attr_writer :env_list
 
   def self.check
     load_env_descriptions unless @env_list
@@ -36,6 +38,16 @@ module Unenviable
 
   def self.env_descriptions=(env_list)
     @env_list = env_list
+  end
+
+  def self.install_wrapper
+    wrapper = Unenviable::ENVWrapper.new
+    Object.send(:remove_const, :ENV)
+    Object.const_set(:ENV, wrapper)
+  end
+
+  def self.described?(key)
+    @env_list.include?(key)
   end
 
   private
