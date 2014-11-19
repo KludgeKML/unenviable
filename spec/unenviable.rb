@@ -19,7 +19,7 @@ describe Unenviable do
     Dir.unlink @config_dir
   end
 
-  describe '#check' do
+  describe '.check' do
     it 'passes silently when no variables are specified' do
       expect(Unenviable.check).to eq(required: [], optional: [], forbidden: [])
     end
@@ -59,12 +59,13 @@ describe Unenviable do
       ENV['VALID_VAR'] = 'TRUE'
       expect(Unenviable.check).to eq(required: [], optional: [], forbidden: ['VALID_VAR'])
     end
+  end
 
+  describe '::install_wrapper' do
     it 'installs the ENV wrapper, then complains when an unspecified variable is read' do
-      Unenviable.env_descriptions = { }
+      Unenviable.env_descriptions = {}
       Unenviable.install_wrapper
       expect { _var = ENV['VALID_VAR'] }.to raise_error(RuntimeError)
     end
-
   end
 end
