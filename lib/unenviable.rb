@@ -23,15 +23,6 @@ module Unenviable
     discrepancies
   end
 
-  def self.create_minimum_dotenv
-    load_env_descriptions unless @env_list
-    File.new('.env', 'wb') do |f|
-      @env_list.each do |var, details|
-        f.write("export #{var}=#{details['initial_value']}") if details[:required]
-      end
-    end
-  end
-
   def self.env_descriptions_file_location
     'config/unenviable.yml'
   end
@@ -48,6 +39,24 @@ module Unenviable
 
   def self.described?(key)
     @env_list.include?(key)
+  end
+
+  def self.generate
+    load_env_descriptions unless @env_list
+    File.new('.env', 'wb') do |f|
+      generate_dotenv_lines.each { |l| f.write(l) }
+    end
+  end
+
+  def self.generate_dotenv_lines
+    lines = []
+    @env_list.each do |var, details|
+      lines << "# #{details[:description]}"
+      lines << "#{var}=#{details[:initial_value]}" if details[:required]
+      lines << "##{var}=#{details[:initial_value]}" unless details[:required]
+    end
+
+    lines
   end
 
   private

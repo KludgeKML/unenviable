@@ -74,4 +74,44 @@ describe Unenviable do
       expect { _var = ENV['VALID_VAR'] }.to_not raise_error
     end
   end
+
+  describe '::generate_dotenv_lines' do
+    it 'makes a commented-out env string for an optional var' do
+      description = 'This variable is optional'
+      name = 'VALID_VAR'
+      Unenviable.env_descriptions = { name => { description: description, required: false } }
+      lines = Unenviable.generate_dotenv_lines
+      expect(lines[0]).to eq("# #{description}")
+      expect(lines[1]).to eq("##{name}=")
+    end
+
+    it 'makes an env string for an required var' do
+      description = 'This variable is optional'
+      name = 'VALID_VAR'
+      Unenviable.env_descriptions = { name => { description: description, required: true } }
+      lines = Unenviable.generate_dotenv_lines
+      expect(lines[0]).to eq("# #{description}")
+      expect(lines[1]).to eq("#{name}=")
+    end
+
+    it 'makes a commented-out env string for an required var with a default value' do
+      description = 'This variable is optional'
+      name = 'VALID_VAR'
+      value = 'my value'
+      Unenviable.env_descriptions = { name => { description: description, required: false, initial_value: value } }
+      lines = Unenviable.generate_dotenv_lines
+      expect(lines[0]).to eq("# #{description}")
+      expect(lines[1]).to eq("##{name}=#{value}")
+    end
+
+    it 'makes an env string for an required var with a default value' do
+      description = 'This variable is optional'
+      name = 'VALID_VAR'
+      value = 'my value'
+      Unenviable.env_descriptions = { name => { description: description, required: true, initial_value: value } }
+      lines = Unenviable.generate_dotenv_lines
+      expect(lines[0]).to eq("# #{description}")
+      expect(lines[1]).to eq("#{name}=#{value}")
+    end
+  end
 end
