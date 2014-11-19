@@ -67,5 +67,11 @@ describe Unenviable do
       Unenviable.install_wrapper
       expect { _var = ENV['VALID_VAR'] }.to raise_error(RuntimeError)
     end
+
+    it 'installs the ENV wrapper, then doesn\'t complain when a specified variable is read' do
+      Unenviable.env_descriptions = { 'VALID_VAR' => { description: 'test' } }
+      Unenviable.install_wrapper
+      expect { _var = ENV['VALID_VAR'] }.to_not raise_error
+    end
   end
 end
