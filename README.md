@@ -15,23 +15,31 @@ From RubyGems: [![Gem Version](https://badge.fury.io/rb/unenviable.svg)](http://
 
 In the config/ directory of your rails app, the file unenviable.yml should contain values like these:
 
-GOOGLE_MAPS_ENDPOINT:
-   description:
-   required: development, test, staging, production
-TEST_DISABLE_HTTPS:
-   description: Disables the HTTPS section of tests
-   forbidden: production
-   initial_value: false
+    GOOGLE_MAPS_ENDPOINT:
+       description:
+       required: development, test, staging, production
+    TEST_DISABLE_HTTPS:
+       description: Disables the HTTPS section of tests
+       forbidden: production
+       initial_value: false
 
 The structure is:
 
-<ENV VAR NAME>:
-  description: <description of what the variable is used for>
-  required: <optional, comma-separated list of environments that need the var to be set>
-  forbidden: <optional, comma-separated list of environments in which the var must not be set>
-  initial_value: <optional, initial value to suggest the variable is set to if missing>
+    <ENV VAR NAME>:
+      description: <description of what the variable is used for>
+      required: <optional, comma-separated list of environments that need the var to be set>
+      forbidden: <optional, comma-separated list of environments in which the var must not be set>
+      initial_value: <optional, initial value to suggest the variable is set to if missing>
 
 ### TOOLS:
 
-unenviable can be called from a post-checkout or merge hook, and will compare the current environment to the one specified in the file.
+unenviable can be called from a command line. 
+
+    $ unenviable check 
+ 
+...can provide a post-checkout or merge hook, comparing the current environment to the one specified in the file.
+
+    $ unenviable generate
+
+...will make a .env file with required variables (optional ones will be commented out, descriptions will be included with each variable and initial values will be included)
 
