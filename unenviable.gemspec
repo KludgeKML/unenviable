@@ -8,9 +8,9 @@ Gem::Specification.new do |s|
   s.authors     = ['K M Lawrence']
   s.email       = 'keith@kludge.co.uk'
   s.executables = ['unenviable']
-  s.files       = ['lib/unenviable.rb', 'bin/unenviable']
+  s.files       = ['lib/unenviable.rb', 'lib/unenviable/env_wrapper.rb', 'bin/unenviable']
   s.homepage    = 'http://rubygems.org/gems/unenviable'
   s.license     = 'MIT'
 
-  s.add_runtime_dependency 'dotenv', '>= 0.11.1'
+  s.add_runtime_dependency 'dotenv', '~> 0.11'
 end
