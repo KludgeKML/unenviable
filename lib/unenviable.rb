@@ -42,18 +42,19 @@ module Unenviable
   end
 
   def self.generate
-    load_env_descriptions unless @env_list
-    File.new('.env', 'wb') do |f|
-      generate_dotenv_lines.each { |l| f.write(l) }
+    File.open('.env', 'wb') do |f|
+      generate_dotenv_lines.each { |l| f.write(l + "\n") }
     end
   end
 
   def self.generate_dotenv_lines
+    load_env_descriptions unless @env_list
     lines = []
     @env_list.each do |var, details|
       lines << "# #{details[:description]}"
       lines << "#{var}=#{details[:initial_value]}" if details[:required]
       lines << "##{var}=#{details[:initial_value]}" unless details[:required]
+      lines << ''
     end
 
     lines
@@ -65,7 +66,12 @@ module Unenviable
   # this needn't be called directly, it's called lazily by the functions.
   def self.load_env_descriptions
     if File.file?(env_descriptions_file_location)
-      @env_list = YAML.load(File.open(env_descriptions_file_location))
+      @base_env_list = YAML.load(File.open(env_descriptions_file_location))
+      @env_list = {}
+      @base_env_list.each do |var, details|
+        @env_list[var] = {}
+        details.each { |k, v| @env_list[var][k.to_sym] = v }
+      end
     else
       @env_list = {}
     end
