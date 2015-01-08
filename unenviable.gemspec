@@ -1,7 +1,7 @@
 # encoding: utf-8
 Gem::Specification.new do |s|
   s.name        = 'unenviable'
-  s.version     = '0.3.0'
+  s.version     = '0.3.1'
   s.date        = '2014-11-19'
   s.summary     = 'Unenviable'
   s.description = 'Makes ENV vars easier to keep track of in distributed development'
