@@ -43,3 +43,8 @@ unenviable can be called from a command line.
 
 ...will make a .env file with required variables (optional ones will be commented out, descriptions will be included with each variable and initial values will be included)
 
+### RAILS USE:
+
+
+
+Unenviable installs a railties object that will close the ENV file, raising errors if you have installed the ENV wrapper and a call to ENV is made after initialization.

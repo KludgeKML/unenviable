@@ -3,6 +3,7 @@ require 'dotenv'
 require 'yaml'
 
 require 'unenviable/env_wrapper'
+require 'unenviable/railtie' if defined?(Rails)
 
 # Handles loading a YAML file that will describe what ENV variables
 # are necessary for a twelve-factor app in a specific environment.
