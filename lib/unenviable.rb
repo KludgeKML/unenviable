@@ -33,6 +33,7 @@ module Unenviable
   end
 
   def self.install_wrapper
+    load_env_descriptions
     wrapper = Unenviable::ENVWrapper.new
     Object.send(:remove_const, :ENV)
     Object.const_set(:ENV, wrapper)
