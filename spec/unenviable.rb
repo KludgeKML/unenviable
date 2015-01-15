@@ -62,16 +62,20 @@ describe Unenviable do
   end
 
   describe '::install_wrapper' do
-    it 'installs the ENV wrapper, then complains when an unspecified variable is read' do
+    it 'installs the ENV wrapper, then after closing it complains when an unspecified variable is read' do
       Unenviable.env_descriptions = {}
       Unenviable.install_wrapper
-      expect { _var = ENV['VALID_VAR'] }.to raise_error(RuntimeError)
+      _var = ENV['VALID_VAR']
+      expect { ENV.close_wrapper }.to raise_error(RuntimeError)
+      Unenviable.remove_wrapper
     end
 
     it 'installs the ENV wrapper, then doesn\'t complain when a specified variable is read' do
       Unenviable.env_descriptions = { 'VALID_VAR' => { description: 'test' } }
       Unenviable.install_wrapper
-      expect { _var = ENV['VALID_VAR'] }.to_not raise_error
+      _var = ENV['VALID_VAR']
+      expect { ENV.close_wrapper }.to_not raise_error
+      Unenviable.remove_wrapper
     end
   end
 

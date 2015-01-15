@@ -1,5 +1,5 @@
 # encoding: utf-8
-require 'dotenv'
+require 'dotenv' if Gem::Specification::find_all_by_name('dotenv').any?
 require 'yaml'
 
 require 'unenviable/env_wrapper'
@@ -12,7 +12,7 @@ module Unenviable
 
   def self.check
     load_env_descriptions unless @env_list
-    Dotenv.load
+    Dotenv.load if Gem::Specification::find_all_by_name('dotenv').any?
     discrepancies = { required: [], optional: [], forbidden: [] }
 
     @env_list.each do |var, details|
@@ -37,6 +37,10 @@ module Unenviable
     wrapper = Unenviable::ENVWrapper.new
     Object.send(:remove_const, :ENV)
     Object.const_set(:ENV, wrapper)
+  end
+
+  def self.remove_wrapper
+    ENV.restore_saved if ENV.respond_to?(:close_wrapper)
   end
 
   def self.described?(key)
