@@ -20,7 +20,6 @@ module Unenviable
       discrepancies[:optional] << var if !details[:required] && !details[:forbidden] && !ENV[var]
       discrepancies[:forbidden] << var if details[:forbidden] && ENV[var]
     end
-
     discrepancies
   end
 
