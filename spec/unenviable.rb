@@ -6,6 +6,10 @@ module Unenviable
   def self.env_descriptions_file_location
     'tmp/unenviable_test/unenviable.yml'
   end
+
+  def self.strict?
+    true
+  end
 end
 
 describe Unenviable do
@@ -72,8 +76,8 @@ describe Unenviable do
 
     it 'installs the ENV wrapper, then doesn\'t complain when a specified variable is read' do
       Unenviable.env_descriptions = { 'VALID_VAR' => { description: 'test' } }
-      Unenviable.install_wrapper
       _var = ENV['VALID_VAR']
+      Unenviable.install_wrapper
       expect { ENV.close_wrapper }.to_not raise_error
       Unenviable.remove_wrapper
     end

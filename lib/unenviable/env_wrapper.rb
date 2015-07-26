@@ -18,7 +18,7 @@ module Unenviable
       problems = ''
       problems += "Required Keys [#{discrepancies[:required].join(', ')}] for this environment are missing! " unless discrepancies[:required].empty?
       problems += "Keys [#{discrepancies[:forbidden].join(', ')}] are forbidden in this environment! " unless discrepancies[:forbidden].empty?
-      handle_problem(problems) unless problems.blank?
+      handle_problem(problems) unless problems == ''
     end
 
     def [](key)
