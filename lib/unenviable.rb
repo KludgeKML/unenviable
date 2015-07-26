@@ -9,6 +9,7 @@ require 'unenviable/railtie' if defined?(Rails)
 # are necessary for a twelve-factor app in a specific environment.
 module Unenviable
   attr_writer :env_list
+  attr_writer :strict
 
   def self.check
     load_env_descriptions unless @env_list
@@ -46,6 +47,14 @@ module Unenviable
     @env_list.include?(key)
   end
 
+  def self.runtime_strict?
+    @strict == :runtime
+  end
+
+  def self.strict?
+    @strict == :initial
+  end
+
   def self.generate
     File.open('.env', 'wb') do |f|
       generate_dotenv_lines.each { |l| f.write(l + "\n") }
@@ -70,15 +79,28 @@ module Unenviable
   # Load the file that descriptions the required environment variables
   # this needn't be called directly, it's called lazily by the functions.
   def self.load_env_descriptions
-    if File.file?(env_descriptions_file_location)
-      @base_env_list = YAML.load(File.open(env_descriptions_file_location))
-      @env_list = {}
-      @base_env_list.each do |var, details|
-        @env_list[var] = {}
-        details.each { |k, v| @env_list[var][k.to_sym] = v }
-      end
-    else
-      @env_list = {}
+    make_defaults
+    return unless File.file?(env_descriptions_file_location)
+
+    @base_env_list = YAML.load(File.open(env_descriptions_file_location))
+    @env_list = {}
+    @base_env_list.each do |var, details|
+      next if special_var(var, details)
+      @env_list[var] = {}
+      details.each { |k, v| @env_list[var][k.to_sym] = v }
     end
+  end
+
+  def self.make_defaults
+    @env_list = {}
+    @strict = false
+  end
+
+  def self.special_var(key, value)
+    if key.downcase == 'strict'
+      @strict = value.to_s.downcase.to_sym
+      return true
+    end
+    false
   end
 end

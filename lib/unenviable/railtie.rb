@@ -6,7 +6,6 @@ module Unenviable
     end
 
     config.after_initialize do
-      puts("IS RAILS INITIALISED? #{Rails.initialized?}")
       ENV.close_wrapper if ENV.respond_to?(:close_wrapper)
     end
   end
